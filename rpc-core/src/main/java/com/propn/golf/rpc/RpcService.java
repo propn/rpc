@@ -11,15 +11,12 @@ import java.lang.annotation.Target;
 import org.springframework.stereotype.Component;
 
 /**
- * @author Administrator
+ * @author XuLei
  *
  */
 @Target({ ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
-@Component
-// 表明可被 Spring 扫描
+@Component // For Spring IOC
 public @interface RpcService {
-
 	Class<?> value();
-
 }

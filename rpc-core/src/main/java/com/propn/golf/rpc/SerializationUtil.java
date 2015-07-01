@@ -1,24 +1,26 @@
 package com.propn.golf.rpc;
 
+import io.protostuff.LinkedBuffer;
+import io.protostuff.ProtostuffIOUtil;
+import io.protostuff.Schema;
+import io.protostuff.runtime.RuntimeSchema;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.objenesis.Objenesis;
 import org.objenesis.ObjenesisStd;
 
-import com.dyuproject.protostuff.LinkedBuffer;
-import com.dyuproject.protostuff.ProtostuffIOUtil;
-import com.dyuproject.protostuff.Schema;
-import com.dyuproject.protostuff.runtime.RuntimeSchema;
-
 /**
  * Protostuff：它基于 Protobuf 序列化框架，面向 POJO，无需编写 .proto 文件
  * 
- * @author Administrator
+ * @author XuLei
  */
 public class SerializationUtil {
+	
 	private static Map<Class<?>, Schema<?>> cachedSchema = new ConcurrentHashMap<>();
-
+	
+	//Use Objenesis to instantiate a new object of a particular class
 	private static Objenesis objenesis = new ObjenesisStd(true);
 
 	private SerializationUtil() {
@@ -36,6 +38,11 @@ public class SerializationUtil {
 		return schema;
 	}
 
+	/**
+	 * Marshal
+	 * @param obj
+	 * @return
+	 */
 	@SuppressWarnings("unchecked")
 	public static <T> byte[] serialize(T obj) {
 		Class<T> cls = (Class<T>) obj.getClass();
@@ -49,7 +56,12 @@ public class SerializationUtil {
 			buffer.clear();
 		}
 	}
-
+/**
+ * UnMarshal
+ * @param data
+ * @param cls
+ * @return
+ */
 	public static <T> T deserialize(byte[] data, Class<T> cls) {
 		try {
 			T message = (T) objenesis.newInstance(cls);

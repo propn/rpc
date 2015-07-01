@@ -33,11 +33,10 @@ public class RpcClient extends SimpleChannelInboundHandler<RpcResponse> {
 		this.host = host;
 		this.port = port;
 	}
-
+	
 	@Override
-	public void channelRead0(ChannelHandlerContext ctx, RpcResponse response) throws Exception {
-		this.response = response;
-
+	protected void messageReceived(ChannelHandlerContext ctx, RpcResponse msg) throws Exception {
+		this.response = msg;
 		synchronized (obj) {
 			obj.notifyAll(); // 收到响应，唤醒线程
 		}
@@ -80,4 +79,5 @@ public class RpcClient extends SimpleChannelInboundHandler<RpcResponse> {
 			group.shutdownGracefully();
 		}
 	}
+	
 }
